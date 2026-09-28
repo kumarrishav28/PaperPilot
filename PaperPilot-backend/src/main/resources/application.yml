@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: PaperPilot
+  profiles:
+    active: dev

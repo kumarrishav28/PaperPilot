@@ -1,0 +1,69 @@
+server:
+  port: 8080 # Server port for the application
+# postgres db configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:paperpilot}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Automatically update the database schema based on entity changes
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true # Format SQL queries for better readability in logs
+
+
+  # open router AI configuration
+  ai:
+    openai:
+      api-key: ${OPENROUTER_API_KEY}
+      base-url: https://openrouter.ai/api/v1
+
+      # free embedding model:
+      embedding:
+        options:
+          model: nvidia/llama-nemotron-embed-vl-1b-v2:free
+
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:openrouter/free}
+          temperature: ${OPENAI_CHAT_TEMPERATURE:0.2}
+
+
+  # vector database configuration
+    vectorstore:
+      pgvector:
+        index-type: NONE # Index type for vector search (e.g.hnsw, ivf, flat)
+        distance-type: COSINE_DISTANCE # Distance metric for vector search (e.g. cosine, euclidean, inner_product)
+        dimensions: 2048 # Number of dimensions for the vector embeddings
+        table-name: vector_store # Name of the table to store vector embeddings
+        schema-name: public # Schema name for the vector table
+        initialize-schema: true # Whether to initialize the schema on application startup
+        remove-existing-vector-store-table: false # Keep vectors across restarts
+
+  # file upload configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB # Maximum file size for uploads
+      max-request-size: 10MB # Maximum request size for uploads
+
+
+# app configuration
+app:
+  rag:
+    chunk-size: 500 # Size of text chunks for RAG (Retrieval-Augmented Generation)
+    chunk-overlap: 50 # Overlap size between text chunks for RAG
+    max-chunks: 10 # Maximum number of chunks to retrieve for RAG
+    top-k: 5 # Number of top results to retrieve for RAG
+    max-context-chars: 12000 # Upper bound for context sent to LLM
+    retry-context-chars: 4000 # Compact context when retrying after timeout
+
+  cors:
+    allowed-origins: "*" # Allow all origins for CORS (Cross-Origin Resource Sharing)
+    allowed-methods: "*" # Allow all HTTP methods for CORS
+    allowed-headers: "*" # Allow all headers for CORS
+    allow-credentials: true # Allow credentials (cookies, authorization headers) for CORS

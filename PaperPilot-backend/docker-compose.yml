@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: paper-pilot-postgres
+    restart: unless-stopped
+    environment:
+        POSTGRES_DB: paperpilot
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+
+    # Mount the init.sql file to the container's entrypoint directory
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d paperpilot"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+volumes:
+    postgres_data:
