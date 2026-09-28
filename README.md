@@ -31,3 +31,4 @@ PaperPilot is a full-stack Retrieval-Augmented Generation (RAG) application for 
 - Citation metadata mapped from retrieval results
 - Sleek, responsive UI with dark theme and animated interactions
 # PaperPilot
+<img width="1707" height="1430" alt="image" src="https://github.com/user-attachments/assets/3145b737-b4ef-4329-81b2-2354c18c7182" />
